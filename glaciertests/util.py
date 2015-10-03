@@ -1,5 +1,6 @@
 import boto.glacier.layer1
 import configparser
+import hashlib
 import os
 import random
 import string
@@ -15,6 +16,16 @@ class Util:
         name = '%s-%s-%d' % (GlacierTestsConfig().prefix(), Util.randomname(8),
             int(time.time()))
         return GlacierTestsConfig().connection().create_vault(name)
+
+    @staticmethod
+    def upload_archive(vault, archive, description):
+        # TODO: currently only single part archives < 1MB are supported (since
+        # we don't compute the sha256 tree hash
+        h = hashlib.sha256()
+        h.update(archive)
+        digest = h.hexdigest()
+        return GlacierTestsConfig().connection().upload_archive(vault, archive,
+                digest, digest, description)
 
 class GlacierTestsConfig:
     class __Glacier:

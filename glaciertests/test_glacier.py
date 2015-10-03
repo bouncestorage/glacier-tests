@@ -32,6 +32,23 @@ def test_vault_delete():
     conn.delete_vault(vault_name)
     _check_not_in_listing([vault_name])
 
+def test_archive_create():
+    conn = GlacierTestsConfig().connection()
+    vault = Util.get_new_vault()
+    vault_name = vault['Location'].split('/')[-1]
+    archive = Util.upload_archive(vault_name, b"hello", None)
+    print(archive)
+    ok_('ArchiveId' in archive)
+
+def test_archive_delete():
+    conn = GlacierTestsConfig().connection()
+    vault = Util.get_new_vault()
+    vault_name = vault['Location'].split('/')[-1]
+    archive = Util.upload_archive(vault_name, b"hello", None)
+    ok_('ArchiveId' in archive)
+    archive_id = archive['ArchiveId']
+    conn.delete_archive(vault_name, archive_id)
+
 def _get_vault_names():
     conn = GlacierTestsConfig().connection()
     result = conn.list_vaults()
