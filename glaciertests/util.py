@@ -6,6 +6,7 @@ import random
 import string
 import time
 
+
 class Util:
     @staticmethod
     def randomname(l):
@@ -14,7 +15,7 @@ class Util:
     @staticmethod
     def get_new_vault():
         name = '%s-%s-%d' % (GlacierTestsConfig().prefix(), Util.randomname(8),
-            int(time.time()))
+                             int(time.time()))
         return GlacierTestsConfig().connection().create_vault(name)
 
     @staticmethod
@@ -25,26 +26,30 @@ class Util:
         h.update(archive)
         digest = h.hexdigest()
         return GlacierTestsConfig().connection().upload_archive(vault, archive,
-                digest, digest, description)
+                                                                digest, digest,
+                                                                description)
+
 
 class GlacierTestsConfig:
     class __Glacier:
         CONFIG_VAR = "GLACIER_TEST_CONF"
-        CONFIG_MAP = { "access_key": "aws_access_key_id",
-                       "secret_key": "aws_secret_access_key",
-                       "https": "is_secure",
-                       "port": "port",
-                       "host": "host",
-                       "prefix": None
+        CONFIG_MAP = {
+                      "access_key": "aws_access_key_id",
+                      "secret_key": "aws_secret_access_key",
+                      "https": "is_secure",
+                      "port": "port",
+                      "host": "host",
+                      "prefix": None
                      }
-        OPTION_MAP = { "is_secure": "getboolean",
-                       "port": "getint"
+        OPTION_MAP = {
+                      "is_secure": "getboolean",
+                      "port": "getint"
                      }
 
         def __init__(self):
-            if not self.CONFIG_VAR in os.environ:
+            if self.CONFIG_VAR not in os.environ:
                 print("Environment variable %s must be defined" %
-                    self.CONFIG_VAR)
+                      self.CONFIG_VAR)
                 exit(1)
             config_file = os.environ.get(self.CONFIG_VAR)
             self.config = self.read_config(config_file)
@@ -77,6 +82,7 @@ class GlacierTestsConfig:
             return boto.glacier.layer1.Layer1(**connect_args)
 
     instance = None
+
     def __init__(self):
         if not GlacierTestsConfig.instance:
             self.instance = self.__Glacier()
