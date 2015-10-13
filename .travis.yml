@@ -1,4 +1,4 @@
 language: python
 install:
-	- pip install pep8
-script: pep8
+  - pip install pep8
+script: pep8 ./glaciertests
