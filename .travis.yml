@@ -1,4 +1,9 @@
+sudo: required
 language: python
+python:
+  - "3.2"
 install:
   - pip install pep8
-script: pep8 ./glaciertests
+script:
+  - pep8 ./glaciertests
+  - ./bootstrap
