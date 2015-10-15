@@ -1,5 +1,5 @@
 import boto.glacier.layer1
-import configparser
+import ConfigParser
 import hashlib
 import os
 import random
@@ -56,11 +56,11 @@ class GlacierTestsConfig:
             if not self.config:
                 print("Empty configuration read from %s" % config_file)
                 exit(1)
-            self.prefix = self.config['glacier']['prefix']
+            self.prefix = self.config.get('glacier', 'prefix')
             self.glacier = self.connect()
 
         def read_config(self, config_file):
-            config = configparser.ConfigParser()
+            config = ConfigParser.ConfigParser()
             config.read(config_file)
             if not config.sections():
                 return None
@@ -69,16 +69,16 @@ class GlacierTestsConfig:
         def connect(self):
             connect_args = {}
             for section in self.config.sections():
-                for k in self.config[section]:
+                for k, v in self.config.items(section):
                     boto_arg = self.CONFIG_MAP[k]
                     if not boto_arg:
                         continue
                     if boto_arg in self.OPTION_MAP:
                         method_name = self.OPTION_MAP[boto_arg]
-                        method = getattr(self.config[section], method_name)
-                        connect_args[boto_arg] = method(k)
+                        method = getattr(self.config, method_name)
+                        connect_args[boto_arg] = method(section, k)
                         continue
-                    connect_args[self.CONFIG_MAP[k]] = self.config[section][k]
+                    connect_args[self.CONFIG_MAP[k]] = v
             return boto.glacier.layer1.Layer1(**connect_args)
 
     instance = None
