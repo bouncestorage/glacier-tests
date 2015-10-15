@@ -1,7 +1,13 @@
-sudo: required
+sudo: false
 language: python
 python:
-  - "3.2"
+  - "3.5"
+addons:
+  apt_packages:
+    - python-pip
+    - python-virtualenv
+    - libevent-dev
+    - python-dev
 install:
   - pip install pep8
 script:
