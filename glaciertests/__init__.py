@@ -36,6 +36,9 @@ def enumerate_vault(vault, conn):
     return result['JobId']
 
 
+_multiprocess_shared_ = True
+
+
 def setup():
     purge_prefix_vaults()
 
