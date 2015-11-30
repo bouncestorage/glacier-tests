@@ -33,18 +33,14 @@ class Util:
 class GlacierTestsConfig:
     class __Glacier:
         CONFIG_VAR = "GLACIER_TEST_CONF"
-        CONFIG_MAP = {
-                      "access_key": "aws_access_key_id",
+        CONFIG_MAP = {"access_key": "aws_access_key_id",
                       "secret_key": "aws_secret_access_key",
                       "https": "is_secure",
                       "port": "port",
                       "host": "host",
-                      "prefix": None
-                     }
-        OPTION_MAP = {
-                      "is_secure": "getboolean",
-                      "port": "getint"
-                     }
+                      "prefix": None}
+        OPTION_MAP = {"is_secure": "getboolean",
+                      "port": "getint"}
 
         def __init__(self):
             if self.CONFIG_VAR not in os.environ:
